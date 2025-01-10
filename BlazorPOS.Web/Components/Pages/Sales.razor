@@ -29,7 +29,7 @@
                         @foreach (var product in _searchResults)
                         {
                             <button class="list-group-item list-group-item-action" @onclick="() => AddToCart(product)">
-                                @product.Name - @product.Price.ToString("C")
+                                @product.Name - @product.Price.ToString("C") - @product.Brand
                             </button>
                         }
                     </div>
@@ -40,6 +40,7 @@
                         <thead>
                             <tr>
                                 <th>Product</th>
+                                <th>Brand</th>
                                 <th>Price</th>
                                 <th>Quantity</th>
                                 <th>Total</th>
@@ -51,6 +52,7 @@
                             {
                                 <tr>
                                     <td>@item.ProductName</td>
+                                    <td>@item.ProductBrand</td>
                                     <td>@item.UnitPrice.ToString("C")</td>
                                     <td>
                                         <input type="number" class="form-control form-control-sm" style="width: 80px"
@@ -155,7 +157,7 @@
 
         var allProducts = await ProductRepository.GetAllAsync();
         _searchResults = allProducts
-            .Where(p => p.Name.Contains(_searchQuery, StringComparison.OrdinalIgnoreCase) ||
+            .Where(p => p.Name.Contains(_searchQuery, StringComparison.OrdinalIgnoreCase) || p.Brand.Contains(_searchQuery, StringComparison.OrdinalIgnoreCase) ||
                        p.Barcode == _searchQuery)
             .ToList();
     }
@@ -176,6 +178,7 @@
             {
                 ProductId = product.Id,
                 ProductName = product.Name,
+                ProductBrand = product.Brand,
                 UnitPrice = product.Price,
                 Quantity = 1,
                 TotalPrice = product.Price
