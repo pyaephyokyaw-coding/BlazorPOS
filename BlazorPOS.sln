@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorPOS.Domain", "BlazorPOS.Domain\BlazorPOS.Domain.csproj", "{50B34908-12E0-4006-A71F-BE767101734A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorPOS.Application", "BlazorPOS.Application\BlazorPOS.Application.csproj", "{81DFDAA0-C24F-465C-8DEB-2F94F9690357}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorPOS.Infrastructure", "BlazorPOS.Infrastructure\BlazorPOS.Infrastructure.csproj", "{DAF1610E-2E07-47AF-B0D9-6D66DBFAF388}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorPOS.Web", "BlazorPOS.Web\BlazorPOS.Web.csproj", "{134360D1-1971-426B-8655-004628212754}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{50B34908-12E0-4006-A71F-BE767101734A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50B34908-12E0-4006-A71F-BE767101734A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50B34908-12E0-4006-A71F-BE767101734A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50B34908-12E0-4006-A71F-BE767101734A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81DFDAA0-C24F-465C-8DEB-2F94F9690357}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81DFDAA0-C24F-465C-8DEB-2F94F9690357}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81DFDAA0-C24F-465C-8DEB-2F94F9690357}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81DFDAA0-C24F-465C-8DEB-2F94F9690357}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAF1610E-2E07-47AF-B0D9-6D66DBFAF388}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAF1610E-2E07-47AF-B0D9-6D66DBFAF388}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAF1610E-2E07-47AF-B0D9-6D66DBFAF388}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAF1610E-2E07-47AF-B0D9-6D66DBFAF388}.Release|Any CPU.Build.0 = Release|Any CPU
+		{134360D1-1971-426B-8655-004628212754}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{134360D1-1971-426B-8655-004628212754}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{134360D1-1971-426B-8655-004628212754}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{134360D1-1971-426B-8655-004628212754}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
