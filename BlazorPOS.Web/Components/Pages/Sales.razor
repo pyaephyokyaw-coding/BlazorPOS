@@ -127,9 +127,13 @@
 </div>
 
 @code {
+
+
+
     private string _searchQuery = "";
     private List<Product>? _searchResults;
     private Sale _currentSale = CreateNewSale();
+    private int qty { get; set; }
 
     private static Sale CreateNewSale()
     {
@@ -180,17 +184,26 @@
 
         _searchResults = null;
         _searchQuery = "";
+
         CalculateTotal();
+
     }
 
     private void RemoveFromCart(SaleItem item)
     {
         _currentSale.Items.Remove(item);
+
         CalculateTotal();
+
     }
 
     private void CalculateTotal()
     {
+        foreach (var item in _currentSale.Items)
+        {
+            item.TotalPrice = item.UnitPrice * item.Quantity;
+        }
+
         _currentSale.TotalAmount = _currentSale.Items.Sum(i => i.TotalPrice);
         _currentSale.Tax = _currentSale.TotalAmount * 0.05m; // 5% tax
         _currentSale.FinalAmount = _currentSale.TotalAmount + _currentSale.Tax - _currentSale.Discount;

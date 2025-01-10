@@ -14,6 +14,11 @@ public class ProductRepository : IProductRepository
         _context = context;
     }
 
+    public void Detach(Product product)
+    {
+        _context.Entry(product).State = EntityState.Detached;
+    }
+
     public async Task<Product?> GetByIdAsync(int id)
     {
         return await _context.Products.FindAsync(id);
