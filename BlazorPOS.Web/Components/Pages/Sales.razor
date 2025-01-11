@@ -2,6 +2,10 @@
 @rendermode InteractiveServer
 @using BlazorPOS.Domain.Entities
 @using BlazorPOS.Application.Interfaces
+@using System.Text
+@using OfficeOpenXml;
+@using OfficeOpenXml.Style
+@using System.Diagnostics
 @inject IProductRepository ProductRepository
 @inject ISaleRepository SaleRepository
 @inject IJSRuntime JSRuntime
@@ -191,6 +195,23 @@
     </div>
 }
 
+<script>
+    function downloadFile(fileName, fileType, content) {
+        const blob = new Blob([content], { type: fileType });
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = fileName;
+        anchor.click();
+        URL.revokeObjectURL(url); // Clean up the object URL after download
+
+        // Show an alert after the download is triggered
+        alert("File has been downloaded successfully!");
+    }
+</script>
+
+
+
 @code {
     private string _searchQuery = "";
     private List<Product>? _searchResults;
@@ -287,8 +308,109 @@
 
     private async void SaveInvoice()
     {
+        await GenerateExcelReport();
         _showInvoice = false;
         _currentSale = CreateNewSale();
-        await JSRuntime.InvokeVoidAsync("alert", "Invoice save successfully.");
+        StateHasChanged();
+    }
+
+    private async Task GenerateExcelReport()
+    {
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+        // Create an Excel package (works with .xlsx format)
+        using (var package = new ExcelPackage())
+        {
+            // Add a worksheet to the package
+            var worksheet = package.Workbook.Worksheets.Add("Sale Report");
+
+            // Set general properties for the worksheet
+            worksheet.Cells[1, 1].Value = $"Customer:";
+            worksheet.Cells[1, 1].Style.Font.Bold = true;
+            worksheet.Cells[1, 2, 1, 5].Merge = true;
+            worksheet.Cells[1, 2].Value = $"{_currentSale.CustomerName}";
+            worksheet.Cells[1, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+            worksheet.Cells[2, 1].Value = $"Phone:";
+            worksheet.Cells[2, 1].Style.Font.Bold = true;
+            worksheet.Cells[2, 2, 2, 5].Merge = true;
+            worksheet.Cells[2, 2].Value = $"{_currentSale.CustomerPhone}";
+            worksheet.Cells[2, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+            worksheet.Cells[3, 1].Value = $"Date:";
+            worksheet.Cells[3, 1].Style.Font.Bold = true;
+            worksheet.Cells[3, 2, 3, 5].Merge = true;
+            worksheet.Cells[3, 2].Value = $"{_currentSale.SaleDate}";
+            worksheet.Cells[3, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+            worksheet.Cells[5, 1].Value = "Product";
+            worksheet.Cells[5, 1].Style.Font.Bold = true;
+            worksheet.Cells[5, 2].Value = "Brand";
+            worksheet.Cells[5, 2].Style.Font.Bold = true;
+            worksheet.Cells[5, 3].Value = "Price";
+            worksheet.Cells[5, 3].Style.Font.Bold = true;
+            worksheet.Cells[5, 4].Value = "Quantity";
+            worksheet.Cells[5, 4].Style.Font.Bold = true;
+            worksheet.Cells[5, 5].Value = "Total";
+            worksheet.Cells[5, 5].Style.Font.Bold = true;
+            worksheet.Cells[5, 1, 5, 5].Style.Border.Bottom.Style = ExcelBorderStyle.Thick;
+            // Insert data into columns
+            int rowIndex = 6;
+            foreach (var item in _currentSale.Items)
+            {
+                worksheet.Cells[rowIndex, 1].Value = item.ProductName;
+                worksheet.Cells[rowIndex, 2].Value = item.ProductBrand;
+                worksheet.Cells[rowIndex, 3].Value = item.UnitPrice;
+                worksheet.Cells[rowIndex, 4].Value = item.Quantity;
+                worksheet.Cells[rowIndex, 5].Value = item.TotalPrice;
+                rowIndex++;
+            }
+            worksheet.Cells[rowIndex-1, 1, rowIndex-1, 5].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+
+            rowIndex++;
+            // Insert total, tax, discount, and final amount
+            worksheet.Cells[rowIndex, 1].Value = "Subtotal";
+            worksheet.Cells[rowIndex, 1].Style.Font.Bold = true;
+            worksheet.Cells[rowIndex, 5].Value = _currentSale.TotalAmount;
+            rowIndex++;
+
+            worksheet.Cells[rowIndex, 1].Value = "Tax";
+            worksheet.Cells[rowIndex, 1].Style.Font.Bold = true;
+            worksheet.Cells[rowIndex, 5].Value = _currentSale.Tax;
+            rowIndex++;
+
+            worksheet.Cells[rowIndex, 1].Value = "Discount";
+            worksheet.Cells[rowIndex, 1].Style.Font.Bold = true;
+            worksheet.Cells[rowIndex, 5].Value = _currentSale.Discount;
+            worksheet.Cells[rowIndex, 1, rowIndex, 5].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+            rowIndex++;
+
+            worksheet.Cells[rowIndex, 1].Value = "Final Amount";
+            worksheet.Cells[rowIndex, 1].Style.Font.Size = 12;
+            worksheet.Cells[rowIndex, 1].Style.Font.Bold = true;
+            worksheet.Cells[rowIndex, 5].Value = _currentSale.FinalAmount;
+            worksheet.Cells[rowIndex, 1, rowIndex, 5].Style.Border.Bottom.Style = ExcelBorderStyle.Thick;
+
+            // Auto-fit the columns based on content
+            worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+            // Save the Excel file to a specified file path
+            var folderPath = @"D:\1_ONF\ONF_Files\";
+            var fileName = $"SalesInvoice_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}_{Guid.NewGuid().ToString("N").Substring(0, 7)}.xlsx";
+            var filePath = folderPath + fileName;
+            var directory = new DirectoryInfo(folderPath);
+            if (!directory.Exists)
+            {
+                directory.Create();
+            }
+            FileInfo fi = new FileInfo(filePath);
+            package.SaveAs(fi);
+
+            await JSRuntime.InvokeVoidAsync("alert", "SalesInvoice has been downloaded successfully!");
+            Process.Start(new ProcessStartInfo
+                {
+                    FileName = filePath,
+                    UseShellExecute = true // This ensures the file is opened with the default application
+                });
+        }
     }
 }
