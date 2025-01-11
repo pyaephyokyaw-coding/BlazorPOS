@@ -128,14 +128,74 @@
     </div>
 </div>
 
+@if (_showInvoice)
+{
+    <div class="modal" tabindex="-1" style="display: block; background-color: rgba(0,0,0,0.5)">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Invoice</h5>
+                    <button type="button" class="btn-close" @onclick="CloseInvoice"></button>
+                </div>
+                <div class="modal-body">
+                    <h5>Customer: @_currentSale.CustomerName</h5>
+                    <h5>Phone: @_currentSale.CustomerPhone</h5>
+                    <h5>Date: @_currentSale.SaleDate.ToString("g")</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Brand</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in _currentSale.Items)
+                            {
+                                <tr>
+                                    <td>@item.ProductName</td>
+                                    <td>@item.ProductBrand</td>
+                                    <td>@item.UnitPrice.ToString("C")</td>
+                                    <td>@item.Quantity</td>
+                                    <td>@item.TotalPrice.ToString("C")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="d-flex justify-content-between">
+                        <span>Subtotal:</span>
+                        <span>@_currentSale.TotalAmount.ToString("C")</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Tax (5%):</span>
+                        <span>@_currentSale.Tax.ToString("C")</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Discount:</span>
+                        <span>@_currentSale.Discount.ToString("C")</span>
+                    </div>
+                    <hr />
+                    <div class="d-flex justify-content-between">
+                        <span class="h5">Final Amount:</span>
+                        <span class="h5">@_currentSale.FinalAmount.ToString("C")</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="SaveInvoice">Save</button>
+                    <button type="button" class="btn btn-secondary" @onclick="CloseInvoice">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 @code {
-
-
-
     private string _searchQuery = "";
     private List<Product>? _searchResults;
     private Sale _currentSale = CreateNewSale();
-    private int qty { get; set; }
+    private bool _showInvoice = false;
 
     private static Sale CreateNewSale()
     {
@@ -189,7 +249,6 @@
         _searchQuery = "";
 
         CalculateTotal();
-
     }
 
     private void RemoveFromCart(SaleItem item)
@@ -197,7 +256,6 @@
         _currentSale.Items.Remove(item);
 
         CalculateTotal();
-
     }
 
     private void CalculateTotal()
@@ -218,7 +276,19 @@
             return;
 
         await SaleRepository.AddAsync(_currentSale);
+        _showInvoice = true;
+    }
+
+    private void CloseInvoice()
+    {
+        _showInvoice = false;
         _currentSale = CreateNewSale();
-        await JSRuntime.InvokeVoidAsync("alert", "Sale completed successfully!");
+    }
+
+    private async void SaveInvoice()
+    {
+        _showInvoice = false;
+        _currentSale = CreateNewSale();
+        await JSRuntime.InvokeVoidAsync("alert", "Invoice save successfully.");
     }
 }
