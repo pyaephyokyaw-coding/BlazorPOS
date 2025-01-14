@@ -9,6 +9,7 @@
 @inject IProductRepository ProductRepository
 @inject ISaleRepository SaleRepository
 @inject IJSRuntime JSRuntime
+@inject HttpClient HttpClient
 
 <PageTitle>Sales</PageTitle>
 
@@ -208,7 +209,24 @@
         // Show an alert after the download is triggered
         alert("File has been downloaded successfully!");
     }
+
+    function downloadFile(url) {
+        window.open(url, '_blank');
+    }
+
+    function downloadFile(url, fileName) {
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        a.click();
+    }
+
+    function openUrl(url) {
+        window.open(url, '_blank');
+    }
+
 </script>
+
 
 
 
@@ -406,11 +424,43 @@
             package.SaveAs(fi);
 
             await JSRuntime.InvokeVoidAsync("alert", "SalesInvoice has been downloaded successfully!");
-            Process.Start(new ProcessStartInfo
-                {
-                    FileName = filePath,
-                    UseShellExecute = true // This ensures the file is opened with the default application
-                });
+
+
+            await OpenExcelFileAsync(fileName);
+
+            // var newFilePath = @"http://localhost:8001/" + fileName;
+            // Process.Start(new ProcessStartInfo
+            //     {
+            //         FileName = newFilePath,
+            //         UseShellExecute = true // This ensures the file is opened with the default application
+            //     });
+
+            // var newFilePath = @"http://localhost:8001/" + fileName;
+
+            // await JSRuntime.InvokeVoidAsync("openUrl", newFilePath);
         }
+    }
+
+    public async Task OpenExcelFileAsync(string fileName)
+    {
+        // Define the file URL
+        string fileUrl = $"http://localhost:8001/{fileName}";
+
+        // Define the local path to save the file
+        string tempFilePath = Path.Combine(Path.GetTempPath(), fileName);
+
+        // Download the file
+        using (HttpClient client = new HttpClient())
+        {
+            var fileBytes = await client.GetByteArrayAsync(fileUrl);
+            await File.WriteAllBytesAsync(tempFilePath, fileBytes);
+        }
+
+        // Open the file with the default application (Excel)
+        Process.Start(new ProcessStartInfo
+            {
+                FileName = tempFilePath,
+                UseShellExecute = true // Ensures the file is opened with the default application
+            });
     }
 }
