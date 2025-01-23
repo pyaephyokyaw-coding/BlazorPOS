@@ -1,0 +1,27 @@
+﻿@page "/two-d"
+
+@rendermode InteractiveServer
+@inject IJSRuntime JSRuntime
+
+<h3>TwoD</h3>
+
+<InputCheckbox @bind-Value="isChecked" DisplayName="@name" style="width:50px; height:50px"/>
+
+<button class="btn btn-primary" type="button" @onclick="ShowAlert">Show Alert</button>
+
+@code {
+    private int number = 10; // Initialize the number field
+    private string name = "TwoD";
+    private string value = "10";
+    private bool isChecked; // Add a boolean field for the checkbox
+
+    protected override void OnInitialized()
+    {
+        // Initialization logic here
+    }
+
+    private void ShowAlert()
+    {
+        JSRuntime.InvokeVoidAsync("alert", $"Number - {number} | Value - {value} | Checked - {isChecked}");
+    }
+}
