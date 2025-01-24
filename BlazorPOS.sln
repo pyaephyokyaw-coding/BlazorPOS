@@ -11,10 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorPOS.Infrastructure", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorPOS.Web", "BlazorPOS.Web\BlazorPOS.Web.csproj", "{134360D1-1971-426B-8655-004628212754}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DbScript", "DbScript", "{8D0B4214-C2EC-41AD-A8E6-CFB08EAA6CF7}"
-	ProjectSection(SolutionItems) = preProject
-		C:\Users\DELL\Desktop\ONF_BlazorPOS_DEV_24Jan2025_1044.sql = C:\Users\DELL\Desktop\ONF_BlazorPOS_DEV_24Jan2025_1044.sql
-	EndProjectSection
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "ONF_POS.Database", "ONF_POS.Database\ONF_POS.Database.sqlproj", "{5DB9203F-3F8D-4044-8AC0-14AE68E6A31C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +35,12 @@ Global
 		{134360D1-1971-426B-8655-004628212754}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{134360D1-1971-426B-8655-004628212754}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{134360D1-1971-426B-8655-004628212754}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DB9203F-3F8D-4044-8AC0-14AE68E6A31C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DB9203F-3F8D-4044-8AC0-14AE68E6A31C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DB9203F-3F8D-4044-8AC0-14AE68E6A31C}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{5DB9203F-3F8D-4044-8AC0-14AE68E6A31C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DB9203F-3F8D-4044-8AC0-14AE68E6A31C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DB9203F-3F8D-4044-8AC0-14AE68E6A31C}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
