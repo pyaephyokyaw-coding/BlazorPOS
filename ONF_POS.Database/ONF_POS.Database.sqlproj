@@ -59,6 +59,6 @@
     <Folder Include="DbScript" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="DbScript\ONF_BlazorPOS_DEV_24Jan2025_1044.sql" />
+    <Build Include="DbScript\onf pos.sql" />
   </ItemGroup>
 </Project>
